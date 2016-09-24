@@ -1,0 +1,83 @@
+---
+title: "task5"
+author: "Raigardas Baluzis"
+date: "September 22, 2016"
+output: html_document
+---
+
+1. Atlikite Monte-Carlo modeliavima sugeneruodami $S$ atsitiktinio dydzio nepriklausomas realizacijas $S_1$, $S_2$, ..., $S_n$. Cia $n=10^5$.
+
+```{r}
+n = 10^5
+S <- replicate(n, (sum(sample(1:6, 3, replace = TRUE)))) # sugeneruojama imtis
+head(S)
+```
+2. Raskite teorini $S$ skirstini, t.y. kiekvienai galimai $S$ reiksmei raskite pasirodymo tikimybe.
+```{r}
+all <- expand.grid(1:6, 1:6, 1:6) # sugeneruojami visi galimi kauliuku iskritimo variantai
+
+all <- rowSums(all) 
+
+prob_t <- table(all) / length(all) 
+
+prob_t <- as.matrix(prob_t)
+```
+3. Is sugeneruotos imties, padarykite santykiniu dazniu lentele ir gautas reiksmes palyginkite su teorinemis tikimybemis. Palyginimui pateikite grafika ir lentele, taip, kad butu patogu lyginti gautus rezultatus.
+```{r}
+prob_e <- table(S) / length(S)
+
+prob_e <- as.matrix(prob_e)
+
+table <- data.frame(prob_e, prob_t)
+```
+s  |   prob_e |  prob_t
+---|----------|--------
+3  | 0.00435  | 0.00462
+4  | 0.01380  | 0.01388
+5  | 0.02791  | 0.02777
+6  | 0.04623  | 0.04629
+7  | 0.06941  | 0.06944
+8  | 0.09721  | 0.09722
+9  | 0.11610  | 0.11574
+10 | 0.12482  | 0.12500
+11 | 0.12557  | 0.12500
+12 | 0.11541  | 0.11574
+13 | 0.09739  | 0.09722
+14 | 0.06857  | 0.06944
+15 | 0.04590  | 0.04629
+16 | 0.02909  | 0.02777
+17 | 0.01371  | 0.01388
+18 | 0.00453  | 0.00462
+```{r}
+plot(prob_e, type = "l", xlab = "S", ylab = "tikimybe")
+
+points(prob_t, col = 2, lty = 3)
+
+legend(1, 0.12, c("teorine", "empirine"), lty = c(1, 3), col = c(1, 2))
+```
+
+4. Suskaiciuokite teorini $S$ vidurki ir dispersija. Padarykite grafikus, kuriuose matytusi, kaip didejant $n$ minetu charakteristiku ivertiniai arteja i teorines reiksmes.
+
+Teorinis vidurkis ir dispersija
+```{r}
+ES <- sum(prob_t[,1] * unique(all))
+
+var <- sum(prob_t[,1] * (unique(all) - ES)^2)
+```
+```{r}
+plot(cumsum(S)/1:n, type="l", xlab="n", ylab = "S / n", main="Vidurkio artejimas i teorini", ylim = c(10,11))
+
+abline(h=ES, col=2)
+```
+```{r}
+a=S*0
+
+for(i in 1:10000){
+
+  a[i]=var(S[1:i])
+}
+
+plot(a[1:10000], type="l", xlab="n", ylab="varS", main="Dispersijos artejimas i teorine", ylim = c(6, 12))
+
+abline(h=var, col=2)
+```
