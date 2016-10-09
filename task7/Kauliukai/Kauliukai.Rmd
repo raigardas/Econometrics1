@@ -1,0 +1,31 @@
+---
+title: "Kauliukai"
+author: "Raigardas Balužis"
+date: "September 30, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Kauliukai. Du žaidėjai žaidžia tokį žaidimą. Pirmasis žaidėjas meta tris kauliukus ir fikuoja iškritusių taškų sumą. Antrasis žaidėjas ridena du kauliukus ir skiačiuoja iškrituių taškų sumą. Laimi tas žaidėjas, kurio taškų suma yra didesnė. Jeigu taškų sumos yra lygios, tai, tai ekspermentas kartojamas iš naujo (ir taip kartojama tol, kol galiausiai nustatomas laimėtojas). Kokia tikimybė laimėti pirmajam žaidėjui?
+```{r}
+repeat{
+  x = sum(sample(1:6, 3, replace = TRUE))
+  y = sum(sample(1:6, 2, replace = TRUE))
+  if(x != y){
+    break  
+  }
+}
+if(x > y){
+  print("laimėjo x")
+} else{
+  print("laimėjo y")
+  }
+n = 10
+X =replicate(n, (sum(sample(1:6, 3, replace = TRUE))))
+Y =replicate(n, (sum(sample(1:6, 2, replace = TRUE))))
+
+
+```
+
