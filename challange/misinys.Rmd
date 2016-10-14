@@ -1,0 +1,44 @@
+---
+title: "challange"
+author: "Raigardas Balužis"
+date: "October 14, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Cenzūra
+```{r}
+dt<-read.csv("cenzura.csv")
+dt<-na.omit(dt)
+hist(dt[2:10000,])
+axis(1, at = seq(0, 5, 1))
+```
+spėjame, kad vidurkis yra 3
+```{r}
+dt1<-dt<3
+var(dt[dt1==TRUE])
+```
+
+
+
+
+
+#Mišinys
+```{r}
+df = read.csv("misisnys.csv")
+hist(df[2:nrow(df),])
+```
+galima speti, kad vienos imties vidurkis yra 3, kitos 13
+```{r}
+df1 = df<9
+var(df[df1 == TRUE])
+
+df2 = df>9
+var(df[df2 == TRUE])
+
+mean(df[df1 == TRUE])
+mean(df[df2 == TRUE])
+```
+
