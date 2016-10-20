@@ -11,6 +11,7 @@
 
 <meta name="author" content="Raigardas Balužis" />
 
+<meta name="date" content="2016-10-18" />
 
 <title>task6</title>
 
@@ -117,16 +118,21 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">task6</h1>
 <h4 class="author"><em>Raigardas Balužis</em></h4>
-<h4 class="date"><em>October 6, 2016</em></h4>
+<h4 class="date"><em>October 18, 2016</em></h4>
 
 </div>
 
 
-<div id="task-6" class="section level1">
-<h1>Task 6</h1>
-<p>Nuskaitykite duomenis. Uztikrinkite, kad duomenu tipai yra korektiski - jei ne, tai koreguokite. Ypatinga demesi atkreipkite i datas.</p>
-<pre class="r"><code>df = read.csv('C:/Users/Ray-B/Desktop/R_programing_swirlResults.csv', stringsAsFactors = FALSE)
-sapply(df, class)</code></pre>
+<div id="task-6.-swirl-rezultatai" class="section level1">
+<h1>Task 6. Swirl rezultatai</h1>
+<div id="duomenu-nuskaitymas" class="section level3">
+<h3>Duomenų nuskaitymas</h3>
+<ul>
+<li>Nuskaitykite duomenis. Užtikrinkite, kad duomenų tipai yra korektiški - jei ne, tai koreguokite. Ypatingą dėmesį atkreipkite į datas.</li>
+</ul>
+<pre class="r"><code>library(prob)</code></pre>
+<pre class="r"><code>df = read.csv('R_programing_swirlResults.csv', stringsAsFactors = FALSE)
+sapply(df, class) # parodo visų elementų klases</code></pre>
 <pre><code>##               X            name        takeTime         sysUser 
 ##       &quot;integer&quot;     &quot;character&quot;       &quot;integer&quot;     &quot;character&quot; 
 ##         sysName         sysTime            user     course_name 
@@ -137,116 +143,126 @@ sapply(df, class)</code></pre>
 ##     &quot;character&quot;       &quot;logical&quot;</code></pre>
 <pre class="r"><code>df$sysTime &lt;- as.POSIXlt(df$sysTime)
 df$datetime &lt;- as.POSIXlt(df$datetime)</code></pre>
-<p>Isvalykite masyva nuo “siuksliu”. Praktikoje retai, kada gaunamas pilnai sutvarkyti duomenys. Taip ir si karta, jums reikia isvalyti masyva nuo galimu problemu. Pavyzdziui:</p>
-<p>ruosiant pateikties forma buvo testuojama ar viskas gerai veikia (reikia identifikuoti ir pasalinti siuo irasus);</p>
-<pre class="r"><code>unique(df$user)</code></pre>
-<pre><code>##  [1] &quot;aaa&quot;               &quot;testas&quot;            &quot;1vbutkus&quot;         
-##  [4] &quot;emru3000&quot;          &quot;gyse&quot;              &quot;simona1234&quot;       
-##  [7] &quot;rokasalek&quot;         &quot;Dominykas&quot;         &quot;SandraKozlovskaja&quot;
-## [10] &quot;ogadova&quot;           &quot;aipe00&quot;            &quot;MildaPie&quot;         
-## [13] &quot;sindeivydas&quot;       &quot;gyse3054&quot;          &quot;ojautakaite&quot;      
-## [16] &quot;rokasaleks&quot;        &quot;kestous&quot;           &quot;zagnyte&quot;          
-## [19] &quot;Karolina&quot;          &quot;edba2903&quot;          &quot;Domante Bulovaite&quot;
-## [22] &quot;Raigardas&quot;         &quot;Greta&quot;             &quot;gretajes&quot;         
-## [25] &quot;Juste&quot;             &quot;juste&quot;             &quot;Dariukxas&quot;        
-## [28] &quot;ju&quot;                &quot;simonalevickaite&quot;  &quot;j&quot;                
-## [31] &quot;Danielius&quot;</code></pre>
-<pre class="r"><code>a = df$user %in% c(&quot;1vbutkus&quot;,&quot;aaa&quot;, &quot;testas&quot;)
-df = df[(a == FALSE),]</code></pre>
-<p>kai kas galejo pakartotinai suvesti formas, taip atsirastu duomenu dubliavimas. Net jeigu dubliavimosi nera, jums reikia tuo isitikinti.</p>
-<pre class="r"><code>table(duplicated(df[c(2,4:10), ]))</code></pre>
-<pre><code>## 
-## FALSE 
-##     8</code></pre>
-<p>Kurie studentai yra pilnai atlike visas swirl uzduotis, t.y. pilnai atliktos visos uzduotis nepraleidziant jokiu klausimu. Tikrinam, kurie studentai praleido nors viena klausima ir pasalinam juos is saraso.</p>
-<pre class="r"><code>table(df[df$skipped==TRUE,7])</code></pre>
-<pre><code>## 
-##         Dariukxas Domante Bulovaite             Greta          gretajes 
-##                30                11                24                 2 
-##          gyse3054                ju             juste          Karolina 
-##                96                 1                 1                76 
-##           kestous           ogadova       ojautakaite         Raigardas 
-##               300               153                 8                 9 
-##        rokasaleks SandraKozlovskaja  simonalevickaite       sindeivydas 
-##               114                16                 5                18</code></pre>
-<pre class="r"><code>table(df[!( df$user==&quot;Dariukxas&quot; | df$user==&quot;Domante Bulovaite&quot; | df$user==&quot;Greta&quot; | df$user==&quot;gretajes&quot; | df$user==&quot;gyse3054&quot; | df$user==&quot;juste&quot; | df$user==&quot;Juste&quot; | df$user==&quot;Karolina&quot; | df$user==&quot;kestous&quot; | df$user==&quot;ogadova&quot; | df$user==&quot;ojautakaite&quot; | df$user==&quot;Raigardas&quot; | df$user==&quot;rokasaleks&quot; |  df$user==&quot;SandraKozlovskaja&quot; | df$user==&quot;simonalevickaite&quot; | df$user==&quot;sindeivydas&quot; | df$user==&quot;j&quot; | df$user==&quot;ju&quot;),7])</code></pre>
-<pre><code>## 
-##     aipe00  Danielius  Dominykas   edba2903   emru3000       gyse 
-##        344          3          2        280        413         26 
-##   MildaPie  rokasalek simona1234    zagnyte 
-##        346          2        333        378</code></pre>
-<p>Sudaroma nauja lentele is likusiu studentu.</p>
-<pre class="r"><code>n = df[(df$user==&quot;aipe00&quot; | df$user==&quot;edba2903&quot; | df$user==&quot;emru3000&quot; | df$user==&quot;MildaPie&quot; | df$user==&quot;simona1234&quot; | df$user==&quot;zagnyte&quot;),]</code></pre>
-<p>Sudaroma nauja lentele is vardu ir pamoku pavadinimu. Pasaliname besidubliujancius duomenis. Tuomet patikrinam, ar visis peieskoje like studentai atliko visas 16 pamoku.</p>
-<pre class="r"><code>d=data.frame(n$user, n$lesson_name)
-d2=d[!duplicated(d), ]
-table(d2[,1])</code></pre>
-<pre><code>## 
-##     aipe00   edba2903   emru3000   MildaPie simona1234    zagnyte 
-##         16         11         16         15         16         16</code></pre>
-<p>Visas pamokas pilnai atliko: aipe00, emru3000, simona1234, zagnyte.</p>
-<div id="studentai-ne-pilnai-atlike-uzduotis" class="section level2">
-<h2>Studentai, ne pilnai atlike uzduotis</h2>
-<p>Sudarome lentele is studentu, kurie nera padare visu uzudociu arba praleido nors viena klausima.</p>
-<pre class="r"><code>sk=df[!(df$user==&quot;aipe00&quot; | df$user==&quot;emru3000&quot; | df$user==&quot;simona1234&quot; | df$user==&quot;zagnyte&quot;),]</code></pre>
-<p>Patikrinama, kiek studentai atliko pamoku.</p>
-<pre class="r"><code>sk1=data.frame(sk$user, sk$lesson_name)
-sk2=sk1[!duplicated(sk1), ]
-table(sk2[,1])</code></pre>
-<pre><code>## 
-##         Danielius         Dariukxas Domante Bulovaite         Dominykas 
-##                 1                16                16                 1 
-##          edba2903             Greta          gretajes              gyse 
-##                11                16                 9                 2 
-##          gyse3054                 j                ju             juste 
-##                14                 1                 1                 2 
-##             Juste          Karolina           kestous          MildaPie 
-##                 5                16                16                15 
-##           ogadova       ojautakaite         Raigardas         rokasalek 
-##                16                15                16                 1 
-##        rokasaleks SandraKozlovskaja  simonalevickaite       sindeivydas 
-##                15                16                15                16</code></pre>
-<p>Patikriname, kiek kas praleido klausimu.</p>
-<pre class="r"><code>table(sk[sk$skipped==TRUE,7])</code></pre>
-<pre><code>## 
-##         Dariukxas Domante Bulovaite             Greta          gretajes 
-##                30                11                24                 2 
-##          gyse3054                ju             juste          Karolina 
-##                96                 1                 1                76 
-##           kestous           ogadova       ojautakaite         Raigardas 
-##               300               153                 8                 9 
-##        rokasaleks SandraKozlovskaja  simonalevickaite       sindeivydas 
-##               114                16                 5                18</code></pre>
+<ul>
+<li>Išvalykite masyvą nuo “šiukšlių”. Praktikoje retai, kada gaunamas pilnai sutvarkyti duomenys. Taip ir šį kartą, jums reikia išvalyti masyvą nuo galimų problemų. Pavyzdžiui:
+<ul>
+<li>ruošiant pateikties formą buvo testuojama ar viskas gerai veikia (reikia įdentifikuoti ir pašalinti šiuo irašus);</li>
+</ul></li>
+</ul>
+<pre class="r"><code>unique(df$user)
+a = df$user %in% c(&quot;1vbutkus&quot;,&quot;aaa&quot;, &quot;testas&quot;)
+df = df[(a == FALSE),] # panaikiname šiuos vartotojus iš duomenų</code></pre>
+<ul>
+<li>kai kas galėjo pakartotinai suvesti formas, taip atsirastu duomenų dubliavimas. Net jeigu dubliavimosi nėra, jums reikia tuo įsitikinti.</li>
+</ul>
+<pre class="r"><code>a &lt;- data.frame(df$user, df$lesson_name, df$question_number, df$correct, df$skipped)
+table(duplicated(a))
+df &lt;- df[!duplicated(a), ]</code></pre>
+<ul>
+<li>Visada gali būti ir kitų netikėtų problemų - verta pagalvoti: Kadangi Juste atliko užduotis naudodama skirtingus vardus (“Juste”, “juste”, “ju”, “j”), tai juos suvienodiname ir visiem jiem priskiriame vardą “Juste”. Tą patį padarome su gyse ir rokasaleks.</li>
+</ul>
+<pre class="r"><code>b = df$user %in% c(&quot;juste&quot;, &quot;ju&quot;, &quot;j&quot;)
+df[(b == TRUE),]$user = &quot;Juste&quot;
+
+b = df$user %in% c(&quot;gyse3054&quot;)
+df[(b == TRUE),]$user = &quot;gyse&quot;
+
+b = df$user %in% c(&quot;rokasalek&quot;)
+df[(b == TRUE),]$user = &quot;rokasaleks&quot;</code></pre>
 </div>
-<div id="laikai" class="section level2">
-<h2>Laikai</h2>
-<p>Sudarome visu duomenu lentele is user, takeTime, lesson_name. Isruosiuojame duomenis pagal pamokos varda</p>
-<pre class="r"><code>t1=data.frame(df$user, df$takeTime, df$lesson_name)
-t2=t1[!duplicated(t1),]
-t3=t2[order(t2$df.lesson_name),]</code></pre>
-<p>Randama, per kiek laiko vidutiniskai buvo atliktos pamokos</p>
-<pre class="r"><code>pamoka=unique(t3$df.lesson_name)
-  laikas= c(mean(t3[t3$df.lesson_name==&quot;Base Graphics&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Basic Building Blocks&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Dates and Times&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Dummy Lesson&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Functions&quot;,2]), mean(t3[t3$df.lesson_name==&quot;lapply and sapply&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Logic&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Looking at Data&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Matrices and Data Frames&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Missing Values&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Sequences of Numbers&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Simulation&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Subsetting Vectors&quot;,2]), mean(t3[t3$df.lesson_name==&quot;vapply and tapply&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Vectors&quot;,2]), mean(t3[t3$df.lesson_name==&quot;Workspace and Files&quot;,2]))
-l=data.frame(pamoka, laikas)</code></pre>
-<p>Kuri pamoka buvo atlikama ilgiausiai/trumpiausiai:</p>
-<pre class="r"><code>l$pamoka[which.max(l$laikas)]</code></pre>
-<pre><code>## [1] Functions
-## 16 Levels: Base Graphics Basic Building Blocks ... Workspace and Files</code></pre>
-<pre class="r"><code>l$pamoka[which.min(l$laikas)]</code></pre>
-<pre><code>## [1] Dummy Lesson
-## 16 Levels: Base Graphics Basic Building Blocks ... Workspace and Files</code></pre>
-</div>
-<div id="sunkiausios-pamokos" class="section level2">
-<h2>Sunkiausios pamokos</h2>
-<p>Pagal prealeistus klausimus ir pagal klaidingu bandymu skaiciu:</p>
-<pre class="r"><code>s= table(df$lesson_name, df$skipped)
-which.max(s[,2])</code></pre>
+<div id="praktiniai-klausimai" class="section level3">
+<h3>Praktiniai klausimai</h3>
+<ul>
+<li>Jums reikia atsakyti į svarbiausius praktinius klausimus:
+<ul>
+<li>Kurie studentai yra pilnai atlikę visas swirl užduotis, t.y. pilnai atliktos visos užduotis nepraleidžiant jokių klausimų.</li>
+</ul>
+Vartotojai, praleidę nors vieną klausimą</li>
+</ul>
+<pre class="r"><code>df_users_skipped &lt;- unique((subset(df, skipped == &quot;TRUE&quot;))$user) 
+df_users_skipped #gauname vartotojus, praleidusius nors vieną klausimą</code></pre>
+<pre><code>##  [1] &quot;aaa&quot;               &quot;SandraKozlovskaja&quot; &quot;ojautakaite&quot;      
+##  [4] &quot;gyse3054&quot;          &quot;sindeivydas&quot;       &quot;Domante Bulovaite&quot;
+##  [7] &quot;rokasaleks&quot;        &quot;Greta&quot;             &quot;Karolina&quot;         
+## [10] &quot;kestous&quot;           &quot;ogadova&quot;           &quot;Raigardas&quot;        
+## [13] &quot;juste&quot;             &quot;ju&quot;                &quot;Dariukxas&quot;        
+## [16] &quot;gretajes&quot;          &quot;simonalevickaite&quot;</code></pre>
+<p>Vartotojai, atlikę visas pamokas</p>
+<pre class="r"><code>df_no_skipped &lt;- setdiff(unique(df$user), df_users_skipped) #setdiff() funkcija reikalauja prob paketo 
+df_no_skipped # vartotojai, nepraleidę klausimų.</code></pre>
+<pre><code>##  [1] &quot;testas&quot;     &quot;1vbutkus&quot;   &quot;emru3000&quot;   &quot;gyse&quot;       &quot;simona1234&quot;
+##  [6] &quot;rokasalek&quot;  &quot;Dominykas&quot;  &quot;aipe00&quot;     &quot;MildaPie&quot;   &quot;zagnyte&quot;   
+## [11] &quot;edba2903&quot;   &quot;Juste&quot;      &quot;j&quot;          &quot;Danielius&quot;</code></pre>
+<pre class="r"><code>b = df$user %in% df_no_skipped
+df_no_skipped &lt;- subset(df, b == TRUE) #kintamasis df_no_skipped yra tokio pat pavidalo, kaip df, tik be vartotojų, praleidusių nors vieną klausimą
+
+i = 1
+for(i in 1:length(unique(df_no_skipped$user))){
+  df_user &lt;- df_no_skipped[df_no_skipped$user == unique(df_no_skipped$user)[i],] #vieno vartotojo duomenys
+  lessons_made &lt;- as.data.frame(table(is.na(df_user$correct)))[2,2] # excel faile pastebime, jog iki galo atliktą pamoką žymi &quot;correct&quot; stulpelio reikšmė NA. Todėl suradus, kiek NA yra kiekvieno vartotojo &quot;correct&quot; stulpelyje, galima nustatyti, kiek pamokų jis atliko. Viso buvo 16 pamokų.
+  if(lessons_made == 16){
+    print(unique(df_no_skipped$user)[i]) #atspausdiname vartotojų, padariusių visas pamokas, vardus
+  }
+  }</code></pre>
+<pre><code>## [1] &quot;emru3000&quot;
+## [1] &quot;simona1234&quot;
+## [1] &quot;aipe00&quot;
+## [1] &quot;zagnyte&quot;</code></pre>
+<ul>
+<li>Reikia identifikuoti ir tuos, kurie ne pilnai viską atliko. Kiekvienam skolininkui reikia identifikuoti kiek pamokų yra nepilnai atsiskaitytą ir kiek klausimų yra praleista.</li>
+</ul>
+<pre class="r"><code>table(df[df$skipped == TRUE, 7]) #parodo koks vartototojas ir kiek klausimų yra praleidęs</code></pre>
+<pre><code>## 
+##               aaa         Dariukxas Domante Bulovaite             Greta 
+##                 1                30                11                24 
+##          gretajes          gyse3054                ju             juste 
+##                 2                96                 1                 1 
+##          Karolina           kestous           ogadova       ojautakaite 
+##                76               300               153                 8 
+##         Raigardas        rokasaleks SandraKozlovskaja  simonalevickaite 
+##                 9               114                16                 5 
+##       sindeivydas 
+##                18</code></pre>
+<pre class="r"><code># Norint identifikuoti vartotojus, nealtikusius visų pamokų, naudojama jau naudotą, bet šiek tiek pakeistą ciklą. 
+i = 1
+for(i in 1:length(unique(df$user))){
+  df_user &lt;- df[df$user == unique(df$user)[i],] #vieno vartotojo duomenys
+  lessons_made &lt;- as.data.frame(table(is.na(df_user$correct)))[2,2]
+  if(lessons_made != 16){
+    cat(unique(df$user)[i], &quot;neatliko&quot;, 16 - lessons_made, &quot;pamokų \n&quot;)
+  }
+  }</code></pre>
+<pre><code>## aaa neatliko 13 pamoku 
+## testas neatliko 15 pamoku 
+## 1vbutkus neatliko 15 pamoku 
+## gyse neatliko 13 pamoku 
+## rokasalek neatliko 15 pamoku 
+## Dominykas neatliko 15 pamoku 
+## ogadova neatliko -3 pamoku 
+## MildaPie neatliko 1 pamoku 
+## gyse3054 neatliko 2 pamoku 
+## rokasaleks neatliko 1 pamoku 
+## kestous neatliko -2 pamoku 
+## Karolina neatliko -1 pamoku 
+## edba2903 neatliko 5 pamoku 
+## gretajes neatliko 6 pamoku 
+## Juste neatliko 11 pamoku 
+## juste neatliko 14 pamoku 
+## ju neatliko 15 pamoku 
+## simonalevickaite neatliko 1 pamoku 
+## j neatliko 15 pamoku 
+## Danielius neatliko 15 pamoku</code></pre>
+<ul>
+<li>Kurios užduotys sunkiausios? (hint: tai galima spręsti ir pagal laiką, ir pagal klaidingus bandymus ir pagal praleidimų skaičių)</li>
+</ul>
+<pre class="r"><code>t &lt;- table(df$lesson_name, df$skipped)
+which.max(t[,2]) #pamoka, kuriai dažniausiai naudota skip()</code></pre>
 <pre><code>## Functions 
 ##         5</code></pre>
-<pre class="r"><code>b= table(df$lesson_name, df$correct)
-which.max(b[,1])</code></pre>
+<pre class="r"><code>t &lt;- table(df$lesson_name, df$correct)
+which.max(t[,1]) #pamoka, kurioje buvo pateikta duagiausiai neteisingų atsakymų </code></pre>
 <pre><code>## Logic 
-##     7</code></pre>
+##     8</code></pre>
 </div>
 </div>
 

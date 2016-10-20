@@ -1,0 +1,26 @@
+---
+title: "Rulete"
+author: "Raigardas Balužis"
+date: "October 20, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Ruletė 
+Nagrinėkime standartinę kazino ruletę. Kokia tikimybė, kad po $1000$ vienodų statymų ant vienos pasirinktos spalvos, bus teigiamas balansas?
+```{r}
+n = 1000
+m = 10000
+d = replicate(m, sum(sample(c(-1, 1), n, replace = TRUE,  prob = c(14/27, 13/27))))
+dt <- d > 0
+```
+Tikimybė
+```{r}
+sum(dt)/m 
+```
+Raskite apytikslę $x$ reikšmę, kuriai galioja nelygybe $P(balansas<x) = 0.25$.
+```{r}
+ quantile(d, prob=0.25)
+```

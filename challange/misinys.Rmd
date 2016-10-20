@@ -10,21 +10,19 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 #Cenzūra
 ```{r}
-dt<-read.csv("cenzura.csv")
+dt<-read.csv("cenzura.csv")$x
 dt<-na.omit(dt)
-hist(dt[2:10000,])
+hist(dt)
 axis(1, at = seq(0, 5, 1))
 ```
 spėjame, kad vidurkis yra 3
 ```{r}
 dt1<-dt<3
 var(dt[dt1==TRUE])
+
+mu = 2.95
+mean((dt - mu)^2, nea.rm = T)
 ```
-
-
-
-
-
 #Mišinys
 ```{r}
 df = read.csv("misisnys.csv")
@@ -41,4 +39,8 @@ var(df[df2 == TRUE])
 mean(df[df1 == TRUE])
 mean(df[df2 == TRUE])
 ```
+
+Kitų darbų vertinimas:
+1) Teisingumas (2balai - OK, 1balas - teisingas sprendimas, tik įvelta nedidelė klaida, 0 - kitais atvejais)
+2) Aiškumas/argumentavimas ()
 
