@@ -1,0 +1,19 @@
+set.---
+title: "task10"
+author: "Raigardas Balužis"
+date: "October 21, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Naudoti set.seed() su bet kokiu skaicium, kad visada generuotu tuos pacius skaicius
+set.seed(1234)
+X <- rnorm(100, 1, 2)
+t.test(X, mu = 1)
+
+```
+

@@ -95,6 +95,7 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
@@ -149,14 +150,25 @@ df$datetime &lt;- as.POSIXlt(df$datetime)</code></pre>
 <li>ruošiant pateikties formą buvo testuojama ar viskas gerai veikia (reikia įdentifikuoti ir pašalinti šiuo irašus);</li>
 </ul></li>
 </ul>
-<pre class="r"><code>unique(df$user)
-a = df$user %in% c(&quot;1vbutkus&quot;,&quot;aaa&quot;, &quot;testas&quot;)
+<pre class="r"><code>unique(df$user)</code></pre>
+<pre><code>##  [1] &quot;aaa&quot;               &quot;testas&quot;            &quot;1vbutkus&quot;         
+##  [4] &quot;emru3000&quot;          &quot;gyse&quot;              &quot;simona1234&quot;       
+##  [7] &quot;rokasalek&quot;         &quot;Dominykas&quot;         &quot;SandraKozlovskaja&quot;
+## [10] &quot;ogadova&quot;           &quot;aipe00&quot;            &quot;MildaPie&quot;         
+## [13] &quot;sindeivydas&quot;       &quot;gyse3054&quot;          &quot;ojautakaite&quot;      
+## [16] &quot;rokasaleks&quot;        &quot;kestous&quot;           &quot;zagnyte&quot;          
+## [19] &quot;Karolina&quot;          &quot;edba2903&quot;          &quot;Domante Bulovaite&quot;
+## [22] &quot;Raigardas&quot;         &quot;Greta&quot;             &quot;gretajes&quot;         
+## [25] &quot;Juste&quot;             &quot;juste&quot;             &quot;Dariukxas&quot;        
+## [28] &quot;ju&quot;                &quot;simonalevickaite&quot;  &quot;j&quot;                
+## [31] &quot;Danielius&quot;</code></pre>
+<pre class="r"><code>a = df$user %in% c(&quot;1vbutkus&quot;,&quot;aaa&quot;, &quot;testas&quot;)
 df = df[(a == FALSE),] # panaikiname šiuos vartotojus iš duomenų</code></pre>
 <ul>
 <li>kai kas galėjo pakartotinai suvesti formas, taip atsirastu duomenų dubliavimas. Net jeigu dubliavimosi nėra, jums reikia tuo įsitikinti.</li>
 </ul>
 <pre class="r"><code>a &lt;- data.frame(df$user, df$lesson_name, df$question_number, df$correct, df$skipped)
-table(duplicated(a))
+#table(duplicated(a))
 df &lt;- df[!duplicated(a), ]</code></pre>
 <ul>
 <li>Visada gali būti ir kitų netikėtų problemų - verta pagalvoti: Kadangi Juste atliko užduotis naudodama skirtingus vardus (“Juste”, “juste”, “ju”, “j”), tai juos suvienodiname ir visiem jiem priskiriame vardą “Juste”. Tą patį padarome su gyse ir rokasaleks.</li>
@@ -181,18 +193,16 @@ Vartotojai, praleidę nors vieną klausimą</li>
 </ul>
 <pre class="r"><code>df_users_skipped &lt;- unique((subset(df, skipped == &quot;TRUE&quot;))$user) 
 df_users_skipped #gauname vartotojus, praleidusius nors vieną klausimą</code></pre>
-<pre><code>##  [1] &quot;aaa&quot;               &quot;SandraKozlovskaja&quot; &quot;ojautakaite&quot;      
-##  [4] &quot;gyse3054&quot;          &quot;sindeivydas&quot;       &quot;Domante Bulovaite&quot;
-##  [7] &quot;rokasaleks&quot;        &quot;Greta&quot;             &quot;Karolina&quot;         
-## [10] &quot;kestous&quot;           &quot;ogadova&quot;           &quot;Raigardas&quot;        
-## [13] &quot;juste&quot;             &quot;ju&quot;                &quot;Dariukxas&quot;        
-## [16] &quot;gretajes&quot;          &quot;simonalevickaite&quot;</code></pre>
+<pre><code>##  [1] &quot;SandraKozlovskaja&quot; &quot;ojautakaite&quot;       &quot;gyse&quot;             
+##  [4] &quot;sindeivydas&quot;       &quot;Domante Bulovaite&quot; &quot;rokasaleks&quot;       
+##  [7] &quot;Greta&quot;             &quot;Karolina&quot;          &quot;kestous&quot;          
+## [10] &quot;ogadova&quot;           &quot;Raigardas&quot;         &quot;Juste&quot;            
+## [13] &quot;Dariukxas&quot;         &quot;gretajes&quot;          &quot;simonalevickaite&quot;</code></pre>
 <p>Vartotojai, atlikę visas pamokas</p>
 <pre class="r"><code>df_no_skipped &lt;- setdiff(unique(df$user), df_users_skipped) #setdiff() funkcija reikalauja prob paketo 
 df_no_skipped # vartotojai, nepraleidę klausimų.</code></pre>
-<pre><code>##  [1] &quot;testas&quot;     &quot;1vbutkus&quot;   &quot;emru3000&quot;   &quot;gyse&quot;       &quot;simona1234&quot;
-##  [6] &quot;rokasalek&quot;  &quot;Dominykas&quot;  &quot;aipe00&quot;     &quot;MildaPie&quot;   &quot;zagnyte&quot;   
-## [11] &quot;edba2903&quot;   &quot;Juste&quot;      &quot;j&quot;          &quot;Danielius&quot;</code></pre>
+<pre><code>## [1] &quot;emru3000&quot;   &quot;simona1234&quot; &quot;Dominykas&quot;  &quot;aipe00&quot;     &quot;MildaPie&quot;  
+## [6] &quot;zagnyte&quot;    &quot;edba2903&quot;   &quot;Danielius&quot;</code></pre>
 <pre class="r"><code>b = df$user %in% df_no_skipped
 df_no_skipped &lt;- subset(df, b == TRUE) #kintamasis df_no_skipped yra tokio pat pavidalo, kaip df, tik be vartotojų, praleidusių nors vieną klausimą
 
@@ -213,16 +223,14 @@ for(i in 1:length(unique(df_no_skipped$user))){
 </ul>
 <pre class="r"><code>table(df[df$skipped == TRUE, 7]) #parodo koks vartototojas ir kiek klausimų yra praleidęs</code></pre>
 <pre><code>## 
-##               aaa         Dariukxas Domante Bulovaite             Greta 
-##                 1                30                11                24 
-##          gretajes          gyse3054                ju             juste 
-##                 2                96                 1                 1 
-##          Karolina           kestous           ogadova       ojautakaite 
-##                76               300               153                 8 
-##         Raigardas        rokasaleks SandraKozlovskaja  simonalevickaite 
-##                 9               114                16                 5 
-##       sindeivydas 
-##                18</code></pre>
+##         Dariukxas Domante Bulovaite             Greta          gretajes 
+##                30                11                24                 1 
+##              gyse             Juste          Karolina           kestous 
+##                96                 2                76               269 
+##           ogadova       ojautakaite         Raigardas        rokasaleks 
+##               131                 8                 9               114 
+## SandraKozlovskaja  simonalevickaite       sindeivydas 
+##                16                 5                18</code></pre>
 <pre class="r"><code># Norint identifikuoti vartotojus, nealtikusius visų pamokų, naudojama jau naudotą, bet šiek tiek pakeistą ciklą. 
 i = 1
 for(i in 1:length(unique(df$user))){
@@ -232,25 +240,12 @@ for(i in 1:length(unique(df$user))){
     cat(unique(df$user)[i], &quot;neatliko&quot;, 16 - lessons_made, &quot;pamokų \n&quot;)
   }
   }</code></pre>
-<pre><code>## aaa neatliko 13 pamoku 
-## testas neatliko 15 pamoku 
-## 1vbutkus neatliko 15 pamoku 
-## gyse neatliko 13 pamoku 
-## rokasalek neatliko 15 pamoku 
-## Dominykas neatliko 15 pamoku 
-## ogadova neatliko -3 pamoku 
+<pre><code>## Dominykas neatliko 15 pamoku 
 ## MildaPie neatliko 1 pamoku 
-## gyse3054 neatliko 2 pamoku 
-## rokasaleks neatliko 1 pamoku 
-## kestous neatliko -2 pamoku 
-## Karolina neatliko -1 pamoku 
 ## edba2903 neatliko 5 pamoku 
-## gretajes neatliko 6 pamoku 
-## Juste neatliko 11 pamoku 
-## juste neatliko 14 pamoku 
-## ju neatliko 15 pamoku 
+## gretajes neatliko 7 pamoku 
+## Juste neatliko 7 pamoku 
 ## simonalevickaite neatliko 1 pamoku 
-## j neatliko 15 pamoku 
 ## Danielius neatliko 15 pamoku</code></pre>
 <ul>
 <li>Kurios užduotys sunkiausios? (hint: tai galima spręsti ir pagal laiką, ir pagal klaidingus bandymus ir pagal praleidimų skaičių)</li>
@@ -262,7 +257,7 @@ which.max(t[,2]) #pamoka, kuriai dažniausiai naudota skip()</code></pre>
 <pre class="r"><code>t &lt;- table(df$lesson_name, df$correct)
 which.max(t[,1]) #pamoka, kurioje buvo pateikta duagiausiai neteisingų atsakymų </code></pre>
 <pre><code>## Logic 
-##     8</code></pre>
+##     7</code></pre>
 </div>
 </div>
 
@@ -277,6 +272,7 @@ which.max(t[,1]) #pamoka, kurioje buvo pateikta duagiausiai neteisingų atsakym�
 $(document).ready(function () {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 });
+
 
 </script>
 
