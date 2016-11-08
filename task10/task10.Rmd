@@ -1,19 +1,47 @@
-set.---
+---
 title: "task10"
 author: "Raigardas Balužis"
 date: "October 21, 2016"
 output: html_document
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+a) Tegul $x_1, ..., X_{100} \sim N(1, 2)$. Susigeneruokite tokią imtį ir patikrinkite nulinę hipotezę, kad $H_0: \mu=1$, su alternatyva, kad $\mu\neq 1$. Tam rekalinga funkcija t.test. Detaliai paaiškinkite ką reiškia funkcijos išvestyje pateikti skaičiai.
 ```{r}
-#Naudoti set.seed() su bet kokiu skaicium, kad visada generuotu tuos pacius skaicius
 set.seed(1234)
-X <- rnorm(100, 1, 2)
-t.test(X, mu = 1)
 
+x <- rnorm(100, 1, 2)#sugeneruojama imtis
+t.test(x, mu = 1)
 ```
+Funkcijos t.test() pateikiamų rezultatų reikšmės:
 
+t - Stjudento kriterijaus statistikos reikšmė
+
+df - laisvės laipsniai
+
+p-value - jei p reikšmė yra mažesnė už 0,05, tuomet H0 atmetama
+
+alternative hypothesis - alternatyva (H1), kad vidurkis nėra lygus 1
+
+95 percent confidence interval - 95% pasikliautinis intervalas
+
+mean of x - imties vidurkis
+
+b) Kartokite a) dalies generavima daug kartų (pvz.10^4) ir suskaičiuokite kiek atvejų buvo atmesta nulinė hipotezė? Išreiškite šį skaičių procentais. Kokią išvadą galite padaryti?
+```{r}
+y = as.vector(replicate(10^4, 0))
+
+for(i in 1:10^4){
+  x <- rnorm(100, 1, 2)
+  if(t.test(x, mu = 1)$p.value > 0.05){
+    y[i] <- 0
+  }
+  else{
+    y[i] <- 1
+  }
+}
+
+mean(y)*100
+```
+Eksperimentą pakartojus 10^4 kartų, tik 5% atvėjų nulinė hipotezė (H0) buvo atmesta.
