@@ -1,0 +1,43 @@
+---
+title: "task11"
+author: "Raigardas Balužis"
+date: "November 9, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Pakete datasets yra duomenų masyvas longley. Iš šio kintamųjų padarykite tiesinę regresiją, kur prognozuojamas kintamasis būtų GNP, o regresosius Employed. Jums reikia:
+
+**Įvertinti paprastosios tiesinės regresijos modelį. Pateikti modelio summary ir pakomentuoti ką reiškia gauti skaičiai. **
+```{r}
+longley.lm <- lm(GNP ~ Employed, data = longley)
+summary(longley.lm)
+```
+summary reikšmės:
+
+Residuals - skirtumas tarp stebimų duomenų ir prognozuojamų duomenų. Parodo taškai yra nutolę nuo regresijos tiesės. 
+
+Coefficients
+- Estimate Std. - β0 ir β1 reikšmės, kai regresijos tiesė aprašoma pavidalu µ(x) = β0 + β1*x
+
+Residual standard error - stebimų duomenų standartinis nuokrypis prognozės.
+
+**Padarykite modelio prognozes taškuose $62, 65, 68$.**
+```{r}
+newx <- c(62, 65, 68)
+newy <- predict(longley.lm, newdata = data.frame(Employed = newx))
+newy
+```
+***Išbrėžkite kintamųjų sklaidos diagramą kartu su tiesinės regresijos tiese ir naujomis prognozėmis. Grafiką pateikite su pilna legena, kurioje būtų nurodyti visi žymėjimai.***
+```{r}
+plot(GNP ~ Employed, data = longley,  pch = 16)
+abline(coef(longley.lm), col = 2)
+points(newx, newy, col=3, pch=19)
+legend("topleft", legend = c("Regresijos tiesė", "prognozės", "stebėjimai"), pch = c(NA, 16, 19), col = c(2, 3, 1), lty = c(1, NA, NA))
+```
+
+##Literatūra:
+
+https://cran.r-project.org/web/packages/IPSUR/vignettes/IPSUR.pdf Chapter11
