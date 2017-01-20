@@ -89,6 +89,9 @@ RMSE = function(duomenys){
 RMSE(trainSet)
 RMSE(testSet)
 ```
+
+Išvada tokia, kad modelis tinka tik tai imčiai, su kuria jis sukurtas, tačiau kitiem duomenim ji, deja, netinka.
+
 b) Išbrėžkite sklaidos diagramą, kurioje $x$ ašyje būtų fit modelio testSet prognozė, o $y$ ašyje faktinės testSet kainų reikšmės. Ant šios sklaidos diagramos išbrėžkite dvi linijas, kurios žymėtų prognozės pasikliautinus intervalus (pasikliovimo lygmuo 90 proc.).
 ```{r}
 quantile(predict(fit, testSet), probs = c(0.05, 0.95))
