@@ -1,0 +1,114 @@
+---
+title: '3'
+author: "Raigardas Balužis"
+date: "January 20, 2017"
+output: html_document
+---
+# Užduotis 3 
+
+a) Nuskaitykite duomenų masyvą. Jeigu įmanoma, nekoreguokite originalaus failo.
+```{r}
+data = read.csv("data.csv", header = TRUE, sep = ";", dec = ".", skip = 7)
+```
+b) Paruoškite duomenis naudojimui. Jūs turite užtikrinti, kad:
+
+* Neliko įrašų su trūkstamomis reikšmėmis - jeigu šalinote įrašus, tai būtinai raportuokite kiek įrašų pašalinta ir kiek liko.
+```{r}
+data[data == "MISSING"] <- NA
+NAs = rowSums(is.na(data))                           # Panaikinam NA
+fixed_data = data[NAs == 0,]                         # Duomenys be NA
+sum(NAs)                                             # Kiek eilučių buvo su NA(t.y. kiek panaikinom)
+nrow(fixed_data)                                     # Kiek eilučių liko po NA pašalinimo
+```
+* Duomenų masyve nėra kažkokių klaidų (pvz. negalimos reikšmės, neteisingas duomenų tipas, t.t.). Patartina patikrinti visų duomenų tipus, nes kartais nuskaitymo procedūra suinterpretuoja duoenis ne taip kaip tikimasi.
+```{r}
+sapply(fixed_data, class) 
+fixed_data$kaina = as.numeric(fixed_data$kaina)
+fixed_data$amzius = as.numeric(fixed_data$amzius)
+sapply(fixed_data, class)                         
+```
+c) Pateikite trumpą kintamųjų apžvalgą. Naudokite tik tuos duomenis (ir kintamuosius), kuriuos planuojate taikyti tyrimui, t.y. jei reikėjo ką nors modifikuoti, tai senųjų reikšmių naudoti nebereikia. Šiai apžvalgai užtenka informacijos, kurią pateikia funkcijos plot, summary ir cor.
+```{r}
+plot(fixed_data)
+summary(fixed_data)
+cor(fixed_data[,1:4])
+```
+d) Duomenų masyvą suskaidykite į du atskirus ir nesikertančius masyvus. Didesnį masyvą turi sudaryti apie 80 proc. turimų stebėjimų. Šį masyvą vadinsime trainSet. Mažesnį masyvą turi sudaryti likę įrašai. Šį masyvą vadinsime testSet. Duomenų suskaidymas turi būti atsitiktinis. Gali būti naudingos šios funkcijos:sample, setdiff, %in%.
+```{r}
+trainSet_ind = sample(1:nrow(fixed_data), round(nrow(fixed_data)*0.8)) # Atsitiktinių indeksų aibė (80% duomenų)
+testSet_ind = setdiff(1:nrow(fixed_data), trainSet_ind)                # Atsitiktinių indeksų aibė, (20% duomenų)
+trainSet = fixed_data[trainSet_ind,]                                   # 80%
+testSet = fixed_data[testSet_ind,]                                     # 20%
+```
+### Tiesinio modelio sudarymas. Modelio sudarymui naudokite trainSet masyvą.
+
+a) Įvertinkite tiesinį modelių, kuriame prognozuojamas kintamasis būtų kaina. Ji turi tiesiškai priklausyti nuo kitų kintamųjų.
+```{r}
+modelis = lm(kaina ~ rida + amzius + galia + markesKodas, trainSet)
+```
+b) Ar visi įtraukti kintamieji daro reikšmingą įtaką prognozei? Jei ne, koreguokite modelį, kad visi kintamieji darytų reikšmingą įtaką. Šį įvertintą modelį žymėsime fit. Užrašykite šio modelio matematinę lygtį.
+```{r}
+summary(modelis)
+library("knitr")                  # funkcija kable reikalauja "knitr" paketo
+kable(summary(modelis)$coef)
+# jei Pr(>|t|) > 0.05, tuomet galima teigti, kad kintamasis yra nereikšmingas mpg, todėl jį galima pašalinti
+```
+Matome, kad galios ir markės įtaka automobilio kainai yra nereikšminga, todėl jas pašalinam iš modelio.
+```{r}
+fit = lm(kaina ~ rida + amzius, trainSet)
+summary(fit)
+kable(summary(fit)$coef)
+```
+
+Modelio lygtis: kaina = 161.2194616 + 0.0000975 * rida - 4.0362501 * amzius
+
+c) Patikrinkite ar modelio paklaidas galime laikyti normaliomis.
+```{r}
+prognoze = predict(fit, trainSet)
+plot(density((prognoze - trainSet$kaina)))
+```
+
+Tankio grafikas primena varpo formą, todėl manau, kad paklaidas galime laikyti normaliomis.
+Tačiau dar atliekame shapiro.test
+
+```{r}
+shapiro.test(fit$res)                       # tikrina, ar paklaidos turi normalųjį skirstinį
+# Pagal shapiro.test p-value>0.05 priimame H0: liekanų paklaidos yra normalios.
+```
+
+### Modelių palyginimas ir prognozė.
+
+a) Suskaičiuokite modelio fit RMSE (Root Mean Squere Error), kuris apibrėžiamas taip $$ RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^n \varepsilon_t^2}.$$
+
+RMSE suskaičiuokite abiem duomenų masyvams trainSet ir testSet. Rezultatus sudėkite į lentelę. Palyginkite rezultatus ir padarykite išvadas.
+```{r}
+RMSE = function(duomenys){
+  n = length(duomenys$kaina)
+  return(sqrt(mean(duomenys$kaina - predict(fit, duomenys))^2))
+}
+RMSE(trainSet)
+RMSE(testSet)
+```
+b) Išbrėžkite sklaidos diagramą, kurioje $x$ ašyje būtų fit modelio testSet prognozė, o $y$ ašyje faktinės testSet kainų reikšmės. Ant šios sklaidos diagramos išbrėžkite dvi linijas, kurios žymėtų prognozės pasikliautinus intervalus (pasikliovimo lygmuo 90 proc.).
+```{r}
+quantile(predict(fit, testSet), probs = c(0.05, 0.95))
+
+plot(predict(fit, testSet), testSet$kaina, xlab = "prognozė", ylab = "faktinės reikšmės")
+abline(v = 140.3756, col = 2)
+abline(v = 220.0027, col = 2)
+
+```
+
+c) Kiek procentų prognozuotų reikšmių nepateko į pasikliautinus intervalus?
+```{r}
+(sum(predict(fit, testSet) < 140.3756 | predict(fit, testSet) > 220.0027)) / length(predict(fit, testSet)) * 100
+```
+
+Į pasiklaiutinius intervalus nepateko 11.5942% reikšmių.
+
+
+
+
+
+
+

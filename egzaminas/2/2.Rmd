@@ -1,0 +1,55 @@
+---
+title: '2'
+author: "Raigardas Balužis"
+date: "January 20, 2017"
+output: html_document
+---
+# Užduotis 2 
+
+a) Raskite $X$ teorinį skirstinį. Išbrėžkite tankio grafiką. Pastaba: labai naudinga savybė, kad dviejų natūraliųjų dydžių suma taip pat yra natūralusis dydis.
+```{r}
+set.seed(1234567890)
+xseq = seq(-10, 12, 0.01)
+densities <- dnorm(xseq, 3 - 1, sqrt(2) + sqrt(3))
+
+plot(xseq, densities, xlab="X", ylab="dažnis", type="l",lwd=2, main="Tankio grafikas")
+```
+
+b) Sugeneruokite $X$ imtį ($N=10000$) pagal pateiktą $X$ apibrėžimą.
+```{r}
+n = 10000
+X1 = rnorm(n, 3, sqrt(2))
+X2 = rnorm(n, -1, sqrt(3))
+X = X1 + X2
+```
+
+c) Palyginkite sugeneruotą $X$ empirinį skirstinį su teorinį skirstiniu.
+Palyginimui pateikite tankių grafikus ir skirstinių charakteristikas (vidurkį, medianą ir standartinį nuokrypį).
+```{r}
+hist(X, prob = TRUE)
+curve(dnorm(x, mean(X), sd(X)), add = TRUE, col = 2, lwd = 2) 
+
+paste("vidurkiai:", "empirinis:", mean(X), "teorinis:", 2)
+paste("medianos:", "empirinė:", median(X), "teorinė:", 2)
+paste("standartiniai nuokrypiai:", "empirinis:", sd(X), "teorinis:", sqrt(2) + sqrt(3))
+```
+
+d) Raskite teorinę įvykio $|X| > 2$ tikimybę (konkreti neatsitikinė konstanta).
+```{r}
+# |X| > 2 <=>  X < -2 ir X > 2
+
+
+```
+
+
+e) Įvertinkite įvykio $|X| > 2$ tikimybę naudojantis Monte-Carlo metodu.
+```{r}
+n = 10000
+X1 = rnorm(n, 3, sqrt(2))
+X2 = rnorm(n, -1, sqrt(3))
+X = X1 + X2
+
+sum(X < (-2) | X > 2)/n
+```
+
+Tikimybė artima 0,5

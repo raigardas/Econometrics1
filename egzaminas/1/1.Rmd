@@ -1,0 +1,37 @@
+---
+title: '1'
+author: "Raigardas Balužis"
+date: "January 20, 2017"
+output: html_document
+---
+# Užduotis 1
+
+Duomenų generavimas
+```{r}
+set.seed(1234567890)
+x <- rnorm(5000)
+```
+a) Suraskite x vidukio ir standartinio nuokrypio įverčius.
+```{r}
+mean(x)                        # vidukris
+sd(x)                          # standartinis nuokrypis
+```
+b) Raskite x išskirtis. Šioje užduotyje, išskirtimis laikome reikšmes, kurios nepakliūna į intervalą $$[\bar{X} - 3\hat{sd}]; \bar{X} + 3\hat{sd}].$$ Čia $\bar{X}$ ir $\hat{sd}$ atitinkamai žymi vidukio ir standartinio nuokrypio įverčius. Atsakymui pateikite ir reikšmes, ir atitinkamus reikšmių indeksus.
+```{r}
+kaire = mean(x) - 3*sd(x)
+desine = mean(x) + 3*sd(x)
+
+isskirtys = x[x < kaire | x > desine]
+ind = which(x %in% isskirtys)
+
+paste(isskirtys, ind)
+```
+c) Pašalinkite rastas išskirtis iš x vektorius ir nubrėžkite atnaujinto x histogramą.
+```{r}
+a = x %in% isskirtys
+naujas = x[a == FALSE]                       # pašalinamos išskirtys
+hist(x, ylab = "Dažnis", main = "x histograma")
+```
+
+
+
